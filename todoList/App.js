@@ -1,9 +1,25 @@
 import { StyleSheet, Text, View, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
-import React from 'react'
+import React, {useState} from 'react'
 import Task from './components/Task';
-import { TouchableOpacity } from 'react-native-web';
+import { Keyboard, TouchableOpacity } from 'react-native-web';
 
 export default function App() {
+  const [task, setTask] = useState();
+  const [taskItems, setTaskItems] = useState([]);
+
+  const handleAddTask = () => {
+    Keyboard.dismiss()
+    setTaskItems([...taskItems, task])
+    setTask("")
+  }
+
+  const completeTask = (index) => {
+    {/* make a copy of the items array */}
+    let itemsCopy = [...taskItems]
+    itemsCopy.splice(index, 1)
+    setTaskItems(itemsCopy)
+  }
+
   return (
     <View style={styles.container}>
 
@@ -13,8 +29,15 @@ export default function App() {
 
         <View style={styles.items}>
           {/* Tasks container */}
-          <Task text="Task 1"/>
-          <Task text="Task 2"/>
+          {
+            taskItems.map((item, index) => {
+             return (
+              <TouchableOpacity key={index} onPress={() => completeTask(index)}>
+                <Task text={item} />
+              </TouchableOpacity>
+            )
+            })
+          }
         </View>
       </View>
 
@@ -22,9 +45,9 @@ export default function App() {
       <KeyboardAvoidingView
         behaviour={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.writeTaskWrapper}>
-          <TextInput style={styles.input} placeholder="write a task"/>
+          <TextInput style={styles.input} placeholder="write a task" value={task} onChangeText={text => setTask(text)}/>
 
-          <TouchableOpacity >
+          <TouchableOpacity onPress={() => handleAddTask()}>
             <View style={styles.addWrapper}>
               <Text style={styles.addText}>+</Text>
             </View>
@@ -56,14 +79,31 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 60,
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     width: "100%",
     alignItems: "center"
   },
 
-  input: {},
+  input: {
+    paddingHorizontal: 15,
+    paddingVertical: 15,
+    backgroundColor: "#FFF",
+    borderRadius: 50,
+    width: 250,
+    borderColor: "#C0C0C0",
+    borderWidth: 1,
+  },
 
-  addWrapper: {},
+  addWrapper: {
+    width: 60,
+    height: 60,
+    backgroundColor: "#FFF",
+    borderRadius: 60,
+    justifyContent: "center",
+    alignItems: "center",
+    borderColor: "#C0C0C0",
+    borderWidth: 1,
+  },
 
   addText: {},
 });
