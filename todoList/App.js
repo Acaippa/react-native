@@ -1,7 +1,7 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import React from 'react'
 import Task from './components/Task';
+import { TouchableOpacity } from 'react-native-web';
 
 export default function App() {
   return (
@@ -17,6 +17,19 @@ export default function App() {
           <Task text="Task 2"/>
         </View>
       </View>
+
+      {/* legg til ny sak */}
+      <KeyboardAvoidingView
+        behaviour={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.writeTaskWrapper}>
+          <TextInput style={styles.input} placeholder="write a task"/>
+
+          <TouchableOpacity >
+            <View style={styles.addWrapper}>
+              <Text style={styles.addText}>+</Text>
+            </View>
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
 
     </View>
   );
@@ -37,5 +50,20 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
-  items: {},
+  items: {marginTop:20},
+
+  writeTaskWrapper: {
+    position: "absolute",
+    bottom: 60,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    alignItems: "center"
+  },
+
+  input: {},
+
+  addWrapper: {},
+
+  addText: {},
 });
